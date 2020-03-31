@@ -25,6 +25,7 @@ router.get("/api/workouts", (req, res) => {
     });
 });
 
+
 router.post("/api/workouts", ({ body }, res) => {
   db.Workout.create(body)
     .then(dbWorkout => {
