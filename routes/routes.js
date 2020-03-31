@@ -2,11 +2,13 @@ const router = require("express").Router();
 const db = require("../models/models");
 let path = require("path");
 
+router.get("/", (req, res) => {
+  res.sendFile(path.resolve("public/index.html"));
+});
 
 router.get("/stats", (req, res) => {
   res.sendFile(path.resolve("public/stats.html"));
 });
-
 
 router.get("/exercise", (req, res) => {
   res.sendFile(path.resolve("public/exercise.html"));
@@ -37,15 +39,16 @@ router.put("/api/workouts/:id", (req, res) => {
   db.Exercise.create(req.body)
     .then((response) => {
       console.log(response);
-      let filter = { _id: req.params.id };
+      let id = { _id: req.params.id };
       let update = { 
         $push: { exercises: response._id },  
         $inc: { totalDuration: response.duration }
       };
 
-      db.Workout.findByIdAndUpdate(filter, update, { new: true })
+      db.Workout.findByIdAndUpdate(id, update, { new: true })
         .then(exercise => {
           console.log(exercise);
+          
           res.json(exercise);
         })
         .catch(err => {
